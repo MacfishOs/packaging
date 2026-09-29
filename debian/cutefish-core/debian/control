@@ -4,6 +4,8 @@ Priority: optional
 Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
+               cutefish-framework,
+               fishui,
                pkg-config,
                libwayland-dev,
                wayland-protocols (>= 1.39),
@@ -38,8 +40,8 @@ Depends: accountsservice,
          qml6-module-qtqml,
          qml6-module-qtquick-window,
          fishui,
-         appmenu-gtk2-module,
          appmenu-gtk3-module,
+         cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: va-driver-all | va-driver

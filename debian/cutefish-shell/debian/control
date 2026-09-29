@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake (>= 3.21),
                debhelper-compat (= 13),
+               cutefish-framework,
                pkg-config,
                qt6-base-dev,
                qt6-base-private-dev,
@@ -31,6 +32,7 @@ Depends: cutefish-compositor,
          qml6-module-qtquick-window,
          dbus-bin,
          xdg-utils,
+         cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: cutefish-settings,

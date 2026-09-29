@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
+               cutefish-framework,
                libwayland-dev,
                pkg-config,
                qt6-base-dev,
@@ -23,6 +24,7 @@ Depends: qml6-module-qtquick-controls,
          qml6-module-qtquick-layouts,
          qml6-module-qtquick-window,
          qml6-module-qtquick-shapes,
+         cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
 Description: CutefishOS UIKit
