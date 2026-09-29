@@ -1,5 +1,5 @@
-# Upstream version of each project, in build order. The Debian changelogs
-# (and the Arch PKGBUILDs) follow these; debian/build.sh checks that they do.
+# Upstream version of each project. The Debian changelogs (and the Arch
+# PKGBUILDs) follow these; debian/build.sh checks that they do.
 cutefish-framework 1.0.0
 fishui 1.0
 qt-plugins 0.6
