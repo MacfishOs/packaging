@@ -1,0 +1,11 @@
+fishui (1.0-1) UNRELEASED; urgency=medium
+
+  * Move the packaging to https://github.com/cutefishos/packaging.
+
+ -- Reion Wong <reionwong@gmail.com>  Tue, 29 Sep 2026 18:02:53 +0800
+
+fishui (0.8) UNRELEASED; urgency=high
+
+  * Initial release (CutefishOS)  <reionwong@gmail.com>
+
+ -- Reion Wong <reionwong@gmail.com>  Sat, 29 Jan 2022 03:23:53 +0800

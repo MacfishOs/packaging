@@ -1,0 +1,11 @@
+cutefish-terminal (0.7-1) UNRELEASED; urgency=medium
+
+  * Move the packaging to https://github.com/cutefishos/packaging.
+
+ -- Reion Wong <reionwong@gmail.com>  Tue, 29 Sep 2026 18:02:53 +0800
+
+cutefish-terminal (0.7) UNRELEASED; urgency=low
+
+  * Initial release (CutefishOS)  <reionwong@gmail.com>
+
+ -- Reion Wong <reionwong@gmail.com>  Mon, 27 Dec 2021 11:12:27 +0800

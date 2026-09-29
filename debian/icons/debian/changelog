@@ -1,0 +1,12 @@
+cutefish-icon-theme (1.0.0-2) UNRELEASED; urgency=medium
+
+  * Move the packaging to https://github.com/cutefishos/packaging.
+
+ -- Reion Wong <reionwong@gmail.com>  Tue, 29 Sep 2026 18:02:53 +0800
+
+cutefish-icon-theme (1.0.0-1) unstable; urgency=medium
+
+  * Replace the legacy icon set with the Colloid-based theme.
+  * Add CMake installation and Debian packaging support.
+
+ -- Reion Wong <reionwong@gmail.com>  Sat, 05 Sep 2026 00:00:00 -0400

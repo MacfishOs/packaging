@@ -1,0 +1,14 @@
+# Upstream version of each project, in build order. The Debian changelogs
+# (and the Arch PKGBUILDs) follow these; debian/build.sh checks that they do.
+cutefish-framework 1.0.0
+fishui 1.0
+qt-plugins 0.6
+icons 1.0.0
+wallpapers 1.0
+cutefish-core 0.8
+cutefish-dm 0.1.0
+filemanager 0.8
+terminal 0.7
+settings 1.0.0
+cutefish-compositor 0.1.0
+cutefish-shell 0.1.0
