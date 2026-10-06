@@ -17,6 +17,7 @@ Build-Depends: cmake,
                libswscale-dev,
                libva-dev,
                libdrm-dev,
+               libsystemd-dev,
                libpipewire-0.3-dev,
                libspa-0.2-dev,
                qt6-base-dev,
@@ -44,5 +45,6 @@ Depends: accountsservice,
          cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
-Recommends: va-driver-all | va-driver
+Recommends: va-driver-all | va-driver,
+            systemd-coredump
 Description: CutefishOS System Components
