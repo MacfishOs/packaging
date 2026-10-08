@@ -5,6 +5,7 @@ Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
                cutefish-framework,
+               libarchive-dev,
                libicu-dev,
                libzip-dev,
                qt6-base-dev,
