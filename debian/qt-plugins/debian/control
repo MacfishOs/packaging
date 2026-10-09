@@ -5,6 +5,8 @@ Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
                libegl-dev,
+               libheif-dev,
+               libjxl-dev,
                librsvg2-dev,
                libwayland-dev,
                pkg-config,

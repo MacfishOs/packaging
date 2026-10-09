@@ -36,7 +36,6 @@ Depends: cutefish-compositor,
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: cutefish-settings,
-            network-manager,
             sound-theme-freedesktop,
             libcanberra-pulse
 Description: CutefishOS desktop shell
