@@ -9,8 +9,6 @@ Build-Depends: cmake,
                pkg-config,
                libwayland-dev,
                wayland-protocols (>= 1.39),
-               libpolkit-qt6-1-dev,
-               libpolkit-agent-1-dev,
                libavcodec-dev,
                libavformat-dev,
                libavutil-dev,
@@ -31,6 +29,7 @@ Homepage: https://github.com/cutefishos/cutefish-core
 Package: cutefish-core
 Architecture: any
 Depends: accountsservice,
+         polkitd,
          libglib2.0-bin,
          gsettings-desktop-schemas,
          qml6-module-qtquick-controls,
