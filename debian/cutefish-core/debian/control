@@ -30,7 +30,6 @@ Package: cutefish-core
 Architecture: any
 Depends: accountsservice,
          polkitd,
-         libglib2.0-bin,
          gsettings-desktop-schemas,
          qml6-module-qtquick-controls,
          qml6-module-qtquick,
@@ -40,7 +39,6 @@ Depends: accountsservice,
          qml6-module-qtqml,
          qml6-module-qtquick-window,
          fishui,
-         appmenu-gtk3-module,
          cutefish-framework,
          ${misc:Depends},
          ${shlibs:Depends}
