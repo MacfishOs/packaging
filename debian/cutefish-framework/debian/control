@@ -30,6 +30,8 @@ Depends: bluez,
          libpam-gnome-keyring,
          network-manager,
          pipewire,
+         pipewire-pulse,
+         upower,
          wireplumber,
          ${misc:Depends},
          ${shlibs:Depends}
