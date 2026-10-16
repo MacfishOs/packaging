@@ -14,7 +14,7 @@ Check out the projects next to this repository, under their repository names:
 
 ```
 cutefish-framework/
-fishui/
+cutefish-core/
 ...
 packaging/
 ```
@@ -23,8 +23,8 @@ Install the build tools, then build:
 
 ```shell
 sudo apt install devscripts equivs --no-install-recommends
-debian/build.sh --install        # every package, in dependency order
-debian/build.sh fishui settings  # just these
+debian/build.sh --install               # every package, in dependency order
+debian/build.sh cutefish-core settings  # just these
 ```
 
 Packages are built in the order of the Build-Depends and Depends in their

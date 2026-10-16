@@ -5,7 +5,7 @@
 # its checkout's committed HEAD; the results go to out/debian/.
 #
 #   debian/build.sh                            # every package
-#   debian/build.sh fishui settings            # just these
+#   debian/build.sh cutefish-core settings     # just these
 #   debian/build.sh --install                  # every package, each installed
 #                                              # before the ones that need it
 set -Eeuo pipefail
