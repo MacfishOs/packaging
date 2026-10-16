@@ -1,0 +1,19 @@
+Source: cutefish-calendar
+Section: utils
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               libical-dev,
+               libicu-dev,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/calendar
+
+Package: cutefish-calendar
+Architecture: any
+Depends: cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Calendar

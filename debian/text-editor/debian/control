@@ -1,0 +1,19 @@
+Source: cutefish-text-editor
+Section: editors
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               libicu-dev,
+               libpcre2-dev,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/text-editor
+
+Package: cutefish-text-editor
+Architecture: any
+Depends: cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Text Editor

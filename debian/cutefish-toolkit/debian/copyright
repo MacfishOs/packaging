@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cutefish-toolkit
+Source: https://github.com/cutefishos/cutefish-toolkit
+
+Files: *
+Copyright: 2026 Reion Wong <reionwong@gmail.com>
+License: GPL-3.0-or-later
+
+Files: third_party/skia/*
+Copyright: 2011 Google Inc.
+License: BSD-3-Clause
+ See third_party/skia/LICENSE.

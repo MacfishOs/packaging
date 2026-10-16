@@ -119,8 +119,28 @@ for project in "${PROJECTS[@]}"; do
 
   tree="$OUT/$source-$upstream"
   rm -rf "$tree"
-  git -C "$src" archive --prefix="$source-$upstream/" HEAD \
-    | xz -T0 > "$OUT/${source}_$upstream.orig.tar.xz"
+  git -C "$src" archive --prefix="$source-$upstream/" -o "$OUT/${source}_$upstream.orig.tar" HEAD
+  # Trees the project fetches rather than tracks, such as a pinned library's
+  # sources, are taken from the checkout's working tree.
+  vendor="$PACKAGING/debian/$project/vendor"
+  if [[ -f "$vendor" ]]; then
+    paths=()
+    excludes=(--exclude=.git)
+    while read -r path; do
+      [[ -z "$path" || "$path" == \#* ]] && continue
+      if [[ "$path" == !* ]]; then
+        excludes+=("--exclude=${path#!}")
+      elif [[ -d "$src/$path" ]]; then
+        paths+=("$path")
+      else
+        echo "Error: $src/$path is missing; fetch it first" >&2
+        exit 1
+      fi
+    done < "$vendor"
+    tar -rf "$OUT/${source}_$upstream.orig.tar" -C "$src" "${excludes[@]}" \
+      --owner=0 --group=0 --numeric-owner --transform="s|^|$source-$upstream/|" "${paths[@]}"
+  fi
+  xz -T0 -f "$OUT/${source}_$upstream.orig.tar"
   tar -xf "$OUT/${source}_$upstream.orig.tar.xz" -C "$OUT"
   # An older commit may still carry its own debian/.
   rm -rf "$tree/debian"

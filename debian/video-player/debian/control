@@ -1,0 +1,19 @@
+Source: cutefish-video-player
+Section: video
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               libicu-dev,
+               libmpv-dev (>= 0.35),
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/video-player
+
+Package: cutefish-video-player
+Architecture: any
+Depends: cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS Video Player

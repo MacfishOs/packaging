@@ -1,0 +1,28 @@
+Source: xdg-desktop-portal-cutefish
+Section: x11
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               pkg-config,
+               libwayland-bin,
+               libwayland-dev,
+               wayland-protocols (>= 1.39),
+               libdrm-dev,
+               libgbm-dev,
+               libpipewire-0.3-dev,
+               libsystemd-dev
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/xdg-desktop-portal-cutefish
+
+Package: xdg-desktop-portal-cutefish
+Architecture: any
+Depends: xdg-desktop-portal,
+         cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: cutefish-compositor
+Description: xdg-desktop-portal backend for Cutefish
+ File chooser, screenshot, screen cast and the other desktop portals of the
+ Cutefish desktop, for sandboxed and other applications.

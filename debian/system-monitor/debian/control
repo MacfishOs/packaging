@@ -1,0 +1,18 @@
+Source: cutefish-system-monitor
+Section: utils
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               libicu-dev,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/system-monitor
+
+Package: cutefish-system-monitor
+Architecture: any
+Depends: cutefish-toolkit,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: CutefishOS System Monitor

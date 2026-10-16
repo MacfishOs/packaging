@@ -34,6 +34,9 @@ against it; without it, those must already be installed.
 
 Each package is built from its checkout's committed HEAD, as a
 `3.0 (quilt)` source package with a `.orig.tar.xz` exported by `git archive`.
+A `debian/<project>/vendor` file names untracked trees of the checkout that go
+into that tarball as well, such as the Skia sources cutefish-toolkit's
+`scripts/fetch-skia.sh` fetches; a line starting with `!` leaves a path out.
 Source and binary packages land in `out/debian/`.
 
 ## Releasing a version

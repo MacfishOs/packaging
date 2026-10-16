@@ -1,0 +1,42 @@
+Source: cutefish-toolkit
+Section: libs
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               clang,
+               generate-ninja,
+               ninja-build,
+               python3,
+               pkg-config,
+               libwayland-bin,
+               libwayland-dev (>= 1.23),
+               wayland-protocols (>= 1.39),
+               libegl-dev,
+               libgles-dev,
+               libxkbcommon-dev,
+               libsystemd-dev,
+               libfontconfig-dev,
+               libfreetype-dev,
+               libharfbuzz-dev,
+               libicu-dev,
+               libpng-dev,
+               libjpeg-dev,
+               zlib1g-dev,
+               libexpat1-dev,
+               libwebp-dev,
+               libtiff-dev,
+               libheif-dev,
+               libjxl-dev
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/cutefish-toolkit
+
+Package: cutefish-toolkit
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends}
+Recommends: libjxl0.11
+Description: Cutefish UI toolkit
+ The toolkit every Cutefish application is built with: a Wayland client for
+ cutefish-compositor that draws with Skia on GLES, with retained views, text
+ layout, controls and frame-paced animation.
