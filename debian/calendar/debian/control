@@ -5,6 +5,7 @@ Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
                debhelper-compat (= 13),
                cutefish-toolkit,
+               libcurl4-openssl-dev,
                libical-dev,
                libicu-dev,
                pkg-config
