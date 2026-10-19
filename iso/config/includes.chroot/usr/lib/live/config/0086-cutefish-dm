@@ -1,0 +1,56 @@
+#!/bin/sh
+
+. /usr/lib/live/config.sh
+
+# Logs the live user in without a password. The file is written at boot, into
+# the live system's memory, so an installed copy of the system never has it.
+
+Cmdline ()
+{
+	for _PARAMETER in ${LIVE_CONFIG_CMDLINE}
+	do
+		case "${_PARAMETER}" in
+			live-config.noautologin|noautologin)
+				LIVE_CONFIG_NOAUTOLOGIN="true"
+				;;
+
+			live-config.username=*|username=*)
+				LIVE_USERNAME="${_PARAMETER#*username=}"
+				;;
+		esac
+	done
+}
+
+Init ()
+{
+	case "${LIVE_CONFIG_NOAUTOLOGIN}" in
+		true)
+			exit 0
+			;;
+	esac
+
+	if ! pkg_is_installed "cutefish-dm" || \
+	   component_was_executed "cutefish-dm"
+	then
+		exit 0
+	fi
+
+	echo -n " cutefish-dm"
+}
+
+Config ()
+{
+	if [ -n "${LIVE_USERNAME}" ]
+	then
+		cat > /etc/cutefish-dm.conf << EOF
+[Autologin]
+User=${LIVE_USERNAME}
+EOF
+	fi
+
+	touch /var/lib/live/config/cutefish-dm
+}
+
+Cmdline
+Init
+Config
