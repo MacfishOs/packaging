@@ -5,6 +5,7 @@ cutefish-framework 1.0
 qt-plugins 1.0
 icons 1.0
 wallpapers 1.0
+<<<<<<< HEAD
 cutefish-core 1.0
 cutefish-dm 1.0
 filemanager 1.0
@@ -19,3 +20,18 @@ cutefish-compositor 1.0
 cutefish-computer-use 1.0
 cutefish-installer 1.0
 cutefish-desktop 1.0
+=======
+cutefish-core 0.8
+cutefish-dm 0.1.0
+filemanager 0.8
+terminal 0.7
+xdg-desktop-portal-cutefish 0.1.0
+settings 1.0.0
+system-monitor 1.0.0
+text-editor 1.0.0
+video-player 1.0.0
+calendar 1.0.0
+cutefish-compositor 0.1.0
+calculator 0.6
+plymouth-theme 0.5
+>>>>>>> f6c878d (Update changes)
