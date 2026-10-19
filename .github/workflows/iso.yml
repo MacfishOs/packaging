@@ -96,7 +96,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: auto
           BUCKET: cutefish-deb
-          KEEP: 3
+          KEEP: 1
         run: |
           if [[ -z "$R2_ACCOUNT_ID" ]]; then
             echo "R2 is not configured; skipping."
