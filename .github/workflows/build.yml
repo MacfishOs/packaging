@@ -1,0 +1,116 @@
+name: Build packages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: packages
+  cancel-in-progress: false
+
+env:
+  SUITE: trixie-nightly
+  BUCKET: cutefish-deb
+
+jobs:
+  build:
+    name: Debian 13
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+          df -h /
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: packaging
+
+      - name: Check out the projects
+        run: |
+          while read -r project _; do
+            [[ -z "$project" || "$project" == \#* ]] && continue
+            [[ -f "packaging/debian/$project/debian/source/format" ]] \
+              && grep -q native "packaging/debian/$project/debian/source/format" \
+              && continue
+            git clone --depth 1 "https://github.com/cutefishos/$project.git" "$project"
+          done < packaging/versions
+
+      - name: Cache Skia
+        uses: actions/cache@v4
+        with:
+          path: cutefish-toolkit/third_party/skia
+          key: skia-${{ hashFiles('cutefish-toolkit/scripts/fetch-skia.sh') }}
+
+      - name: Fetch Skia
+        run: cutefish-toolkit/scripts/fetch-skia.sh
+
+      - name: Build
+        env:
+          SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+        run: |
+          docker run --rm \
+            -v "$PWD:/work" \
+            -w /work \
+            -e SIGNING_KEY \
+            -e SUITE \
+            debian:trixie \
+            bash -euo pipefail -c '
+              apt-get update
+              apt-get install -y --no-install-recommends \
+                apt-utils \
+                build-essential \
+                ca-certificates \
+                devscripts \
+                equivs \
+                git \
+                gnupg \
+                xz-utils
+
+              git config --global --add safe.directory "*"
+              packaging/debian/build.sh --install --snapshot
+
+              if [[ -n "$SIGNING_KEY" ]]; then
+                gpg --batch --import <<< "$SIGNING_KEY"
+                packaging/debian/publish.sh --sign "$SUITE" repo
+              else
+                packaging/debian/publish.sh "$SUITE" repo
+              fi
+            '
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: cutefish-debian-13-amd64
+          path: repo/
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Publish
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+        run: |
+          if [[ -z "$R2_ACCOUNT_ID" || ! -f repo/dists/$SUITE/InRelease ]]; then
+            echo "R2 or the signing key is not configured; skipping."
+            exit 0
+          fi
+          s3() { aws s3 --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" "$@"; }
+
+          # New packages go up before the indexes that name them, and old
+          # ones are removed only after the indexes stop naming them.
+          s3 sync "repo/pool/$SUITE" "s3://$BUCKET/pool/$SUITE"
+          s3 sync "repo/dists/$SUITE" "s3://$BUCKET/dists/$SUITE" --delete
+          s3 cp repo/cutefish.asc "s3://$BUCKET/cutefish.asc"
+          s3 sync "repo/pool/$SUITE" "s3://$BUCKET/pool/$SUITE" --delete
