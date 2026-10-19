@@ -12,7 +12,8 @@ Build-Depends: cmake,
                pkg-config,
                qt6-base-dev,
                qt6-base-private-dev,
-               qt6-declarative-dev
+               qt6-declarative-dev,
+               qt6-declarative-private-dev
 Standards-Version: 4.7.2
 Homepage: https://github.com/cutefishos/qt-plugins
 
