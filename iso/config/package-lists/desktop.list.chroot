@@ -29,6 +29,7 @@ fonts-noto-mono
 fonts-noto-color-emoji
 
 # Utility
+chromium
 fastfetch
 calamares
 calamares-settings-debian
