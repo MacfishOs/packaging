@@ -1,0 +1,90 @@
+name: Build ISO
+
+on:
+  workflow_run:
+    workflows: [Build packages]
+    types: [completed]
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - iso/**
+      - .github/workflows/iso.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: iso
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Debian 13
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache
+          df -h /
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Name
+        run: echo "NAME=cutefish-nightly-$(date -u +%Y%m%d)-$(git rev-parse --short=7 HEAD)-amd64" >> "$GITHUB_ENV"
+
+      - name: Build ISO
+        run: |
+          docker run --rm --privileged \
+            -v "$PWD/iso:/work" \
+            -w /work \
+            -e NAME \
+            debian:trixie \
+            bash -euxo pipefail -c '
+              apt-get update
+              apt-get install -y --no-install-recommends \
+                live-build \
+                ca-certificates
+
+              ./build.sh "$NAME"
+            '
+          sudo chown -R "$(id -u):$(id -g)" iso
+
+      - name: Checksums
+        run: |
+          cd iso
+          sha256sum "$NAME.iso" | tee "$NAME.iso.sha256"
+          {
+            echo "## $NAME.iso"
+            echo '```'
+            ls -l "$NAME.iso"
+            cat "$NAME.iso.sha256"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Attest
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: iso/${{ env.NAME }}.iso
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.NAME }}
+          path: |
+            iso/${{ env.NAME }}.iso
+            iso/${{ env.NAME }}.iso.sha256
+            iso/${{ env.NAME }}.packages
+          if-no-files-found: error
+          retention-days: 7

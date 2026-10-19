@@ -1,0 +1,34 @@
+# Desktop
+cutefish-desktop
+
+# Base
+bash-completion
+nano
+
+# Network
+iw
+wireless-regdb
+wpasupplicant
+
+# Audio
+pipewire-audio
+
+# Authorization
+pkexec
+
+# Input method
+fcitx5
+fcitx5-frontend-all
+fcitx5-config-qt
+im-config
+
+# Fonts
+fonts-noto-core
+fonts-noto-cjk
+fonts-noto-mono
+fonts-noto-color-emoji
+
+# Utility
+fastfetch
+calamares
+calamares-settings-debian

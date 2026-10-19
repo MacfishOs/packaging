@@ -3,6 +3,9 @@ name: Build packages
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - iso/**
+      - .github/workflows/iso.yml
   schedule:
     - cron: "0 18 * * *"
   workflow_dispatch:

@@ -1,0 +1,18 @@
+.auto/
+.build/
+.cache/
+chroot/
+binary/
+*.iso
+*.img
+*.contents
+*.packages
+*.zsync
+.DS_Store
+live-image-*
+# Written by lb config.
+config/binary
+config/bootstrap
+config/chroot
+config/common
+config/source

@@ -7,6 +7,7 @@ no packaging of their own; it all lives here.
 - `debian/<project>/debian/` is the `debian/` directory of that project's
   Debian source package.
 - `arch/` will hold the Arch Linux PKGBUILDs.
+- `iso/` is the live-build configuration of the Debian 13 live ISO.
 
 ## Debian
 
@@ -55,6 +56,15 @@ echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://deb.cutefish.org tr
   | sudo tee /etc/apt/sources.list.d/cutefish.list
 sudo apt update
 sudo apt install cutefish-desktop
+```
+
+## ISO
+
+The ISO installs `cutefish-desktop` from deb.cutefish.org. CI builds it after
+each package publish; to build it locally, as root:
+
+```shell
+iso/build.sh
 ```
 
 ## Releasing a version
