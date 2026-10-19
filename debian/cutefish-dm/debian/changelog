@@ -1,5 +1,6 @@
-cutefish-dm (0.1.0-1) UNRELEASED; urgency=medium
+cutefish-dm (1.0-1) UNRELEASED; urgency=medium
 
   * Initial release.
+  * Version every Cutefish package 1.0.
 
- -- Reion Wong <reionwong@gmail.com>  Fri, 25 Sep 2026 22:34:44 +0800
+ -- Reion Wong <reionwong@gmail.com>  Tue, 20 Oct 2026 07:03:34 +0800

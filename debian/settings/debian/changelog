@@ -1,8 +1,9 @@
-cutefish-settings (1.0.0-1) UNRELEASED; urgency=medium
+cutefish-settings (1.0-1) UNRELEASED; urgency=medium
 
   * Move the packaging to https://github.com/cutefishos/packaging.
+  * Version every Cutefish package 1.0.
 
- -- Reion Wong <reionwong@gmail.com>  Tue, 29 Sep 2026 18:02:53 +0800
+ -- Reion Wong <reionwong@gmail.com>  Tue, 20 Oct 2026 07:03:34 +0800
 
 cutefish-settings (0.8) UNRELEASED; urgency=high
 

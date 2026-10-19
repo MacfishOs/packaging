@@ -11,7 +11,7 @@
 #   debian/build.sh --install                  # every package, each installed
 #                                              # before the ones that need it
 #   debian/build.sh --snapshot                 # versioned after the commit,
-#                                              # e.g. 0.1.0+git20261020120000.1a2b3c4-1
+#                                              # e.g. 1.0~git20261020120000.1a2b3c4-1
 set -Eeuo pipefail
 
 PACKAGING="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -140,7 +140,7 @@ for project in "${PROJECTS[@]}"; do
 
   if [[ "$SNAPSHOT" == true && "$native" == false ]]; then
     stamp="$(TZ=UTC0 git -C "$src" log -1 --date=format-local:%Y%m%d%H%M%S --format=%cd HEAD)"
-    upstream="$upstream+git$stamp.$(git -C "$src" rev-parse --short=7 HEAD)"
+    upstream="$upstream~git$stamp.$(git -C "$src" rev-parse --short=7 HEAD)"
     version="$upstream-${version##*-}"
   fi
 

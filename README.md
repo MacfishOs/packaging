@@ -40,7 +40,8 @@ into that tarball as well, such as the Skia sources cutefish-toolkit's
 `scripts/fetch-skia.sh` fetches; a line starting with `!` leaves a path out.
 Source and binary packages land in `out/debian/`. With `--snapshot`, each
 package is versioned after its checkout's commit, such as
-`0.1.0+git20261020120000.1a2b3c4-1`.
+`1.0~git20261020120000.1a2b3c4-1`. The `~` puts snapshots before the release
+in `versions`, so it should name the next release, not the last one.
 
 `debian/publish.sh trixie-nightly repo/` lays those packages out as the
 `trixie-nightly` suite of an APT repository under `repo/`; `--sign` signs it
