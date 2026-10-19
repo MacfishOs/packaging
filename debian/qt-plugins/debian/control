@@ -3,6 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Reion Wong <reionwong@gmail.com>
 Build-Depends: cmake,
+               dbus-daemon <!nocheck>,
                debhelper-compat (= 13),
                libheif-dev,
                libjxl-dev,
