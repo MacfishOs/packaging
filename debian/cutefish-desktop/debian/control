@@ -1,0 +1,35 @@
+Source: cutefish-desktop
+Section: metapackages
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/cutefishos/packaging
+
+Package: cutefish-desktop
+Architecture: all
+Depends: cutefish-calendar,
+         cutefish-compositor,
+         cutefish-core,
+         cutefish-dm,
+         cutefish-filemanager,
+         cutefish-framework,
+         cutefish-icon-theme,
+         cutefish-qt-plugins,
+         cutefish-settings,
+         cutefish-system-monitor,
+         cutefish-terminal,
+         cutefish-text-editor,
+         cutefish-toolkit,
+         cutefish-video-player,
+         cutefish-wallpapers,
+         xdg-desktop-portal-cutefish,
+         ${misc:Depends}
+Recommends: fonts-noto-cjk,
+            fonts-noto-color-emoji,
+            fonts-noto-core,
+            fonts-noto-mono
+Description: Cutefish desktop environment
+ This metapackage installs the complete Cutefish desktop: the compositor and
+ shell, the display manager, the system components and the applications.
