@@ -37,7 +37,25 @@ Each package is built from its checkout's committed HEAD, as a
 A `debian/<project>/vendor` file names untracked trees of the checkout that go
 into that tarball as well, such as the Skia sources cutefish-toolkit's
 `scripts/fetch-skia.sh` fetches; a line starting with `!` leaves a path out.
-Source and binary packages land in `out/debian/`.
+Source and binary packages land in `out/debian/`. With `--snapshot`, each
+package is versioned after its checkout's commit, such as
+`0.1.0+git20261020120000.1a2b3c4-1`.
+
+`debian/publish.sh trixie-nightly repo/` lays those packages out as the
+`trixie-nightly` suite of an APT repository under `repo/`; `--sign` signs it
+with the default GnuPG key.
+
+## APT repository
+
+CI builds snapshots of every package each night and publishes them:
+
+```
+sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://deb.cutefish.org/cutefish.asc
+echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://deb.cutefish.org trixie-nightly main" \
+  | sudo tee /etc/apt/sources.list.d/cutefish.list
+sudo apt update
+sudo apt install cutefish-desktop
+```
 
 ## Releasing a version
 
