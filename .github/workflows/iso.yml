@@ -88,3 +88,35 @@ jobs:
             iso/${{ env.NAME }}.packages
           if-no-files-found: error
           retention-days: 7
+
+      - name: Publish
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          BUCKET: cutefish-deb
+          KEEP: 3
+        run: |
+          if [[ -z "$R2_ACCOUNT_ID" ]]; then
+            echo "R2 is not configured; skipping."
+            exit 0
+          fi
+          s3() { aws s3 --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" "$@"; }
+
+          for file in "$NAME.iso" "$NAME.iso.sha256" "$NAME.packages"; do
+            s3 cp "iso/$file" "s3://$BUCKET/iso/nightly/$file"
+          done
+          echo "$NAME" > LATEST
+          s3 cp LATEST "s3://$BUCKET/iso/nightly/LATEST"
+
+          # Only the newest builds stay; names sort by date, and the listing by
+          # upload time breaks ties within a day.
+          s3 ls "s3://$BUCKET/iso/nightly/" | awk '/\.iso$/ { print $1 " " $2 " " $4 }' | sort -r \
+            | tail -n +$((KEEP + 1)) | while read -r _ _ old; do
+                old="${old%.iso}"
+                for file in "$old.iso" "$old.iso.sha256" "$old.packages"; do
+                  s3 rm "s3://$BUCKET/iso/nightly/$file"
+                done
+              done
+          s3 ls "s3://$BUCKET/iso/nightly/"
