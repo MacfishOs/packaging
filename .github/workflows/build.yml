@@ -23,6 +23,10 @@ jobs:
     name: Debian 13
     runs-on: ubuntu-24.04
     timeout-minutes: 300
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
 
     steps:
       - name: Free disk space
@@ -37,13 +41,16 @@ jobs:
 
       - name: Check out the projects
         run: |
+          echo "packaging $(git -C packaging rev-parse HEAD)" > commits
           while read -r project _; do
             [[ -z "$project" || "$project" == \#* ]] && continue
             [[ -f "packaging/debian/$project/debian/source/format" ]] \
               && grep -q native "packaging/debian/$project/debian/source/format" \
               && continue
             git clone --depth 1 "https://github.com/cutefishos/$project.git" "$project"
+            echo "$project $(git -C "$project" rev-parse HEAD)" >> commits
           done < packaging/versions
+          cat commits
 
       - name: Cache Skia
         uses: actions/cache@v4
@@ -86,6 +93,28 @@ jobs:
                 packaging/debian/publish.sh "$SUITE" repo
               fi
             '
+
+      - name: Checksums
+        run: |
+          sudo chown -R "$(id -u):$(id -g)" repo
+          cp commits "repo/dists/$SUITE/commits"
+          (cd repo && find "pool/$SUITE" -type f | sort | xargs sha256sum) > "repo/dists/$SUITE/SHA256SUMS"
+          cat "repo/dists/$SUITE/SHA256SUMS"
+          {
+            echo "## Commits"
+            echo '```'
+            cat commits
+            echo '```'
+            echo "## SHA-256"
+            echo '```'
+            cat "repo/dists/$SUITE/SHA256SUMS"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Attest
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-checksums: repo/dists/${{ env.SUITE }}/SHA256SUMS
 
       - name: Upload packages
         uses: actions/upload-artifact@v4
