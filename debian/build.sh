@@ -193,8 +193,11 @@ for project in "${PROJECTS[@]}"; do
   rm -rf "$tree/debian"
   cp -a "$packaging" "$tree/debian"
   if [[ "$SNAPSHOT" == true ]]; then
+    # A snapshot sorts before the release it leads up to, which dch only
+    # writes when forced.
     (cd "$tree" && DEBEMAIL="$(dpkg-parsechangelog -S Maintainer)" \
-      dch --newversion "$version" --distribution UNRELEASED "Snapshot of commit $(git -C "$src" rev-parse HEAD).")
+      dch --force-bad-version --newversion "$version" --distribution UNRELEASED \
+        "Snapshot of commit $(git -C "$src" rev-parse HEAD).")
   fi
 
   (cd "$tree" && dpkg-buildpackage -us -uc)
