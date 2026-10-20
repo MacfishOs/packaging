@@ -47,8 +47,9 @@ jobs:
             bash -euxo pipefail -c '
               apt-get update
               apt-get install -y --no-install-recommends \
-                live-build \
-                ca-certificates
+                apt-utils \
+                ca-certificates \
+                live-build
 
               ./build.sh "$NAME"
             '
