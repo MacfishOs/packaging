@@ -76,9 +76,9 @@ EOF
 }
 
 root() {
-  header "Cutefish packages"
+  header "Cutefish packages for Debian 13"
   cat << EOF
-<h1>Cutefish packages</h1>
+<h1>Cutefish packages for Debian 13</h1>
 <p class="lead">The APT repository of Cutefish Desktop for Debian 13, and nightly
 ISOs for testing. Nothing here is an official release yet.</p>
 
@@ -86,8 +86,8 @@ ISOs for testing. Nothing here is an official release yet.</p>
 <p>The newest live ISO is in <a href="/iso/nightly/">iso/nightly</a>.</p>
 
 <h2>Adding the repository</h2>
-<p>Download the key, check that its fingerprint is the one below, and add the
-repository:</p>
+<p>For Debian 13 (trixie) on amd64. Download the key, check that its
+fingerprint is the one below, and add the repository:</p>
 <pre><code>sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://deb.cutefish.org/cutefish.asc
 gpg --show-keys /etc/apt/keyrings/cutefish.asc
 echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://deb.cutefish.org trixie-nightly main" \\
@@ -115,9 +115,9 @@ iso() {
   built="$(date -u '+%B %-d, %Y, %H:%M UTC')"
   human="$(awk -v b="$size" 'BEGIN { printf "%.2f GB", b / 1e9 }')"
 
-  header "Cutefish nightly ISO"
+  header "Cutefish nightly ISO for Debian 13"
   cat << EOF
-<h1>Cutefish nightly ISO</h1>
+<h1>Cutefish nightly ISO for Debian 13</h1>
 <p class="lead">The newest live ISO of Cutefish on Debian 13, built from the
 latest code. It is meant for testing; only the newest one is kept.</p>
 
