@@ -76,18 +76,20 @@ EOF
 }
 
 root() {
-  header "Cutefish packages for Debian 13"
+  header "Cutefish Downloads"
   cat << EOF
-<h1>Cutefish packages for Debian 13</h1>
-<p class="lead">The APT repository of Cutefish Desktop for Debian 13, and nightly
-ISOs for testing. Nothing here is an official release yet.</p>
+<h1>Cutefish Downloads</h1>
+<p class="lead">Live ISOs of Cutefish and the APT repository of Cutefish
+Desktop, built from the latest code every night. Nothing here is an official
+release yet.</p>
 
 <h2>Nightly ISO</h2>
-<p>The newest live ISO is in <a href="/iso/nightly/">iso/nightly</a>.</p>
+<p>The newest live ISO, on Debian 13: try Cutefish from a USB stick and install
+it from there. See <a href="/iso/nightly/">iso/nightly</a>.</p>
 
-<h2>Adding the repository</h2>
-<p>For Debian 13 (trixie) on amd64. Download the key, check that its
-fingerprint is the one below, and add the repository:</p>
+<h2>APT repository for Debian 13</h2>
+<p>To add Cutefish Desktop to Debian 13 (trixie) on amd64, download the key,
+check that its fingerprint is the one below, and add the repository:</p>
 <pre><code>sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://download.cutefish.org/debian/cutefish.asc
 gpg --show-keys /etc/apt/keyrings/cutefish.asc
 echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://download.cutefish.org/debian trixie-nightly main" \\
