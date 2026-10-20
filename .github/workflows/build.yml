@@ -145,4 +145,6 @@ jobs:
           s3 sync "repo/pool/$SUITE" "s3://$BUCKET/pool/$SUITE"
           s3 sync "repo/dists/$SUITE" "s3://$BUCKET/dists/$SUITE" --delete
           s3 cp repo/cutefish.asc "s3://$BUCKET/cutefish.asc"
+          packaging/web/index.sh root > index.html
+          s3 cp index.html "s3://$BUCKET/index.html"
           s3 sync "repo/pool/$SUITE" "s3://$BUCKET/pool/$SUITE" --delete

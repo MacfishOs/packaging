@@ -119,4 +119,7 @@ jobs:
                   s3 rm "s3://$BUCKET/iso/nightly/$file"
                 done
               done
+
+          web/index.sh iso "$NAME" "$(stat -c %s "iso/$NAME.iso")" "$(cut -d ' ' -f 1 "iso/$NAME.iso.sha256")" > index.html
+          s3 cp index.html "s3://$BUCKET/iso/nightly/index.html"
           s3 ls "s3://$BUCKET/iso/nightly/"
