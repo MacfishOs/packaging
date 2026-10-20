@@ -149,3 +149,8 @@ jobs:
           s3 cp index.html "s3://$BUCKET/index.html"
           s3 cp index.html "s3://$BUCKET/debian/index.html"
           s3 sync "repo/pool/$SUITE" "s3://$BUCKET/debian/pool/$SUITE" --delete
+
+          # The repository moved under debian/; the copy at the root goes.
+          s3 rm "s3://$BUCKET/dists/" --recursive
+          s3 rm "s3://$BUCKET/pool/" --recursive
+          s3 rm "s3://$BUCKET/cutefish.asc"
