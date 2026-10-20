@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Writes the index pages of deb.cutefish.org to standard output:
+# Writes the index pages of download.cutefish.org to standard output:
 #
 #   web/index.sh root                       # the repository's front page
 #   web/index.sh iso NAME SIZE SHA256       # iso/nightly/, for NAME.iso
@@ -88,9 +88,9 @@ ISOs for testing. Nothing here is an official release yet.</p>
 <h2>Adding the repository</h2>
 <p>For Debian 13 (trixie) on amd64. Download the key, check that its
 fingerprint is the one below, and add the repository:</p>
-<pre><code>sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://deb.cutefish.org/cutefish.asc
+<pre><code>sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://download.cutefish.org/debian/cutefish.asc
 gpg --show-keys /etc/apt/keyrings/cutefish.asc
-echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://deb.cutefish.org trixie-nightly main" \\
+echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://download.cutefish.org/debian trixie-nightly main" \\
   | sudo tee /etc/apt/sources.list.d/cutefish.list
 sudo apt update
 sudo apt install cutefish-desktop</code></pre>
@@ -101,9 +101,9 @@ ed25519, fingerprint $FINGERPRINT</code></pre>
 <p>Only the build workflow can sign with it.</p>
 
 <h2>What went into the packages</h2>
-<p><a href="/dists/trixie-nightly/commits">commits</a> lists the commit of every
+<p><a href="/debian/dists/trixie-nightly/commits">commits</a> lists the commit of every
 project the newest build used, and
-<a href="/dists/trixie-nightly/SHA256SUMS">SHA256SUMS</a> the checksum of every
+<a href="/debian/dists/trixie-nightly/SHA256SUMS">SHA256SUMS</a> the checksum of every
 file it made. Each file also has a
 <a href="https://github.com/cutefishos/packaging/attestations">build provenance attestation</a>.</p>
 EOF

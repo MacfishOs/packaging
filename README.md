@@ -52,8 +52,8 @@ with the default GnuPG key.
 CI builds snapshots of every package each night and publishes them:
 
 ```
-sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://deb.cutefish.org/cutefish.asc
-echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://deb.cutefish.org trixie-nightly main" \
+sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://download.cutefish.org/debian/cutefish.asc
+echo "deb [signed-by=/etc/apt/keyrings/cutefish.asc] https://download.cutefish.org/debian trixie-nightly main" \
   | sudo tee /etc/apt/sources.list.d/cutefish.list
 sudo apt update
 sudo apt install cutefish-desktop
@@ -61,7 +61,7 @@ sudo apt install cutefish-desktop
 
 ## ISO
 
-The ISO installs `cutefish-desktop` from deb.cutefish.org. CI builds it after
+The ISO installs `cutefish-desktop` from download.cutefish.org. CI builds it after
 each package publish; to build it locally, as root:
 
 ```shell
