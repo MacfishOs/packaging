@@ -1,10 +1,7 @@
 name: Build ISO
 
+# Build packages starts it after each publish.
 on:
-  workflow_run:
-    workflows: [Build packages]
-    types: [completed]
-    branches: [main]
   push:
     branches: [main]
     paths:
@@ -22,7 +19,6 @@ concurrency:
 jobs:
   build:
     name: Debian 13
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     permissions:
@@ -37,9 +33,7 @@ jobs:
           df -h /
 
       - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+        uses: actions/checkout@v7
 
       - name: Name
         run: echo "NAME=cutefish-nightly-$(date -u +%Y%m%d)-$(git rev-parse --short=7 HEAD)-amd64" >> "$GITHUB_ENV"
@@ -79,7 +73,7 @@ jobs:
           subject-path: iso/${{ env.NAME }}.iso
 
       - name: Upload ISO
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.NAME }}
           path: |

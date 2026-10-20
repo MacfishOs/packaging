@@ -22,14 +22,48 @@ env:
   BUCKET: cutefish-deb
 
 jobs:
+  changes:
+    name: Changes
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Compare with the published build
+        id: compare
+        run: |
+          echo "packaging $GITHUB_SHA" > commits
+          while read -r project _; do
+            [[ -z "$project" || "$project" == \#* ]] && continue
+            grep -qs native "debian/$project/debian/source/format" && continue
+            echo "$project $(git ls-remote "https://github.com/cutefishos/$project.git" HEAD | cut -f 1)" >> commits
+          done < versions
+          cat commits
+
+          # The nightly run builds only when a commit moved since the last
+          # publish; a push or a manual run always builds.
+          changed=true
+          if [[ "$GITHUB_EVENT_NAME" == schedule ]] \
+             && curl -fsSL "https://download.cutefish.org/debian/dists/$SUITE/commits" | cmp -s - commits; then
+            changed=false
+            echo "Nothing changed since the last publish." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
   build:
     name: Debian 13
+    needs: changes
+    if: needs.changes.outputs.changed == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 300
     permissions:
       contents: read
       id-token: write
       attestations: write
+      actions: write
 
     steps:
       - name: Free disk space
@@ -38,7 +72,7 @@ jobs:
           df -h /
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: packaging
 
@@ -56,7 +90,7 @@ jobs:
           cat commits
 
       - name: Cache Skia
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: cutefish-toolkit/third_party/skia
           key: skia-${{ hashFiles('cutefish-toolkit/scripts/fetch-skia.sh') }}
@@ -120,7 +154,7 @@ jobs:
           subject-checksums: repo/dists/${{ env.SUITE }}/SHA256SUMS
 
       - name: Upload packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cutefish-debian-13-amd64
           path: repo/
@@ -150,7 +184,9 @@ jobs:
           s3 cp index.html "s3://$BUCKET/debian/index.html"
           s3 sync "repo/pool/$SUITE" "s3://$BUCKET/debian/pool/$SUITE" --delete
 
-          # The repository moved under debian/; the copy at the root goes.
-          s3 rm "s3://$BUCKET/dists/" --recursive
-          s3 rm "s3://$BUCKET/pool/" --recursive
-          s3 rm "s3://$BUCKET/cutefish.asc"
+      # A run started with the workflow's own token is the one kind that may
+      # start another workflow.
+      - name: Build the ISO
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run iso.yml --repo "$GITHUB_REPOSITORY" --ref "$GITHUB_REF_NAME"
