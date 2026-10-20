@@ -1,0 +1,49 @@
+name: Publish pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - web/**
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Index pages
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Publish
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          BUCKET: cutefish-deb
+        run: |
+          if [[ -z "$R2_ACCOUNT_ID" ]]; then
+            echo "R2 is not configured; skipping."
+            exit 0
+          fi
+          s3() { aws s3 --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" "$@"; }
+
+          web/index.sh root > index.html
+          s3 cp index.html "s3://$BUCKET/index.html"
+          s3 cp index.html "s3://$BUCKET/debian/index.html"
+
+          # The ISO page describes the published ISO, read back from the bucket.
+          base=https://download.cutefish.org/iso/nightly
+          name="$(curl -fsSL "$base/LATEST")"
+          headers="$(curl -fsSI "$base/$name.iso" | tr -d '\r')"
+          size="$(awk 'tolower($1) == "content-length:" { print $2 }' <<< "$headers")"
+          built="$(sed -n 's/^[Ll]ast-[Mm]odified: //p' <<< "$headers")"
+          digest="$(curl -fsSL "$base/$name.iso.sha256" | cut -d ' ' -f 1)"
+          web/index.sh iso "$name" "$size" "$digest" "$built" > iso.html
+          s3 cp iso.html "s3://$BUCKET/iso/nightly/index.html"

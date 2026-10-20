@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths-ignore:
       - iso/**
+      - web/**
       - .github/workflows/iso.yml
+      - .github/workflows/pages.yml
   schedule:
     - cron: "0 18 * * *"
   workflow_dispatch:
