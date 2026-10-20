@@ -2,7 +2,8 @@
 # Writes the index pages of download.cutefish.org to standard output:
 #
 #   web/index.sh root                       # the repository's front page
-#   web/index.sh iso NAME SIZE SHA256       # iso/nightly/, for NAME.iso
+#   web/index.sh iso NAME SIZE SHA256 [DATE]  # iso/nightly/, for NAME.iso built at
+#                                             # DATE (now by default)
 set -Eeuo pipefail
 
 FINGERPRINT="5F52 7F0C B976 4BA0 AF99  BAE5 F4A4 30BC 9E10 91A7"
@@ -66,8 +67,7 @@ footer() {
 Built and published by
 <a href="https://github.com/cutefishos/packaging/actions">GitHub Actions</a>
 from <a href="https://github.com/cutefishos/packaging">cutefishos/packaging</a>.
-See <a href="$BLOG">how Cutefish packages are built</a> and
-<a href="https://cutefish.org/blog/official-sources/">the official sources of Cutefish</a>.
+See <a href="$BLOG">how Cutefish packages are built</a>.
 </footer>
 </main>
 </body>
@@ -112,7 +112,7 @@ EOF
 
 iso() {
   local name="$1" size="$2" digest="$3" built human
-  built="$(date -u '+%B %-d, %Y, %H:%M UTC')"
+  built="$(date -u -d "${4:-now}" '+%B %-d, %Y, %H:%M UTC')"
   human="$(awk -v b="$size" 'BEGIN { printf "%.2f GB", b / 1e9 }')"
 
   header "Cutefish nightly ISO for Debian 13"
@@ -143,8 +143,8 @@ EOF
 case "${1:-}" in
   root) root ;;
   iso)
-    (( $# == 4 )) || { echo "Usage: web/index.sh iso NAME SIZE SHA256" >&2; exit 1; }
-    iso "$2" "$3" "$4"
+    (( $# == 4 || $# == 5 )) || { echo "Usage: web/index.sh iso NAME SIZE SHA256 [DATE]" >&2; exit 1; }
+    iso "$2" "$3" "$4" "${5:-}"
     ;;
-  *) echo "Usage: web/index.sh root | iso NAME SIZE SHA256" >&2; exit 1 ;;
+  *) echo "Usage: web/index.sh root | iso NAME SIZE SHA256 [DATE]" >&2; exit 1 ;;
 esac
