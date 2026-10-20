@@ -1,0 +1,34 @@
+Source: cutefish-computer-use
+Section: utils
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: debhelper-compat (= 13),
+               cargo,
+               rustc,
+               librust-base64-dev (>= 0.22),
+               librust-bitflags-dev (>= 2),
+               librust-jpeg-encoder-dev (>= 0.6),
+               librust-libc-dev (>= 0.2),
+               librust-memmap2-dev (>= 0.9),
+               librust-png-dev (>= 0.17),
+               librust-serde-json-dev (>= 1),
+               librust-wayland-backend-dev (>= 0.3),
+               librust-wayland-client-dev (>= 0.31),
+               librust-wayland-protocols-dev (>= 0.32),
+               librust-wayland-protocols+client-dev,
+               librust-wayland-protocols+staging-dev,
+               librust-wayland-protocols+unstable-dev,
+               librust-wayland-scanner-dev (>= 0.31)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Homepage: https://github.com/cutefishos/cutefish-computer-use
+
+Package: cutefish-computer-use
+Architecture: any
+Depends: cutefish-compositor,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: Cutefish desktop control for agent apps
+ An MCP server that lets agent apps see the Cutefish desktop and use its
+ pointer and keyboard once the user allows it. The compositor asks the user
+ for consent and can stop the agent at any time.

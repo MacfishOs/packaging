@@ -26,7 +26,8 @@ Depends: cutefish-calendar,
          cutefish-wallpapers,
          xdg-desktop-portal-cutefish,
          ${misc:Depends}
-Recommends: fonts-noto-cjk,
+Recommends: cutefish-computer-use,
+            fonts-noto-cjk,
             fonts-noto-color-emoji,
             fonts-noto-core,
             fonts-noto-mono
