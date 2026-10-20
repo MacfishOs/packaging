@@ -1,0 +1,3 @@
+# On the medium's package pool, for the installer to add to the installed
+# system: it installs and updates the boot loader.
+grub-efi-amd64

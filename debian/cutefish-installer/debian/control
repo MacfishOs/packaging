@@ -1,0 +1,24 @@
+Source: cutefish-installer
+Section: admin
+Priority: optional
+Maintainer: Reion Wong <reionwong@gmail.com>
+Build-Depends: cmake,
+               debhelper-compat (= 13),
+               cutefish-toolkit,
+               pkg-config
+Standards-Version: 4.7.2
+Homepage: https://github.com/cutefishos/cutefish-installer
+
+Package: cutefish-installer
+Architecture: any
+Depends: cutefish-toolkit,
+         dosfstools,
+         e2fsprogs,
+         fdisk,
+         squashfs-tools,
+         util-linux,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: Cutefish installer
+ Installs Cutefish from the live system onto a disk. It is meant for the live
+ image only: installing the system removes it.

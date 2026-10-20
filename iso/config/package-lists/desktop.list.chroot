@@ -31,5 +31,11 @@ fonts-noto-color-emoji
 # Utility
 chromium
 fastfetch
-calamares
-calamares-settings-debian
+
+# Installer, with the boot loader programs it puts on the disk
+cutefish-installer
+efibootmgr
+grub-efi-amd64-bin
+grub-efi-amd64-signed
+grub-pc-bin
+shim-signed
