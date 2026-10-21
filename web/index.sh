@@ -88,7 +88,7 @@ release yet.</p>
 it from there. See <a href="/iso/nightly/">iso/nightly</a>.</p>
 
 <h2>APT repository for Debian 13</h2>
-<p>To add Cutefish Desktop to Debian 13 (trixie) on amd64, download the key,
+<p>To add Cutefish Desktop to Debian 13 (trixie) on amd64 or arm64, download the key,
 check that its fingerprint is the one below, and add the repository:</p>
 <pre><code>sudo curl -fsSLo /etc/apt/keyrings/cutefish.asc https://download.cutefish.org/debian/cutefish.asc
 gpg --show-keys /etc/apt/keyrings/cutefish.asc
