@@ -85,7 +85,8 @@ release yet.</p>
 
 <h2>Nightly ISO</h2>
 <p>The newest live ISO, on Debian 13: try Cutefish from a USB stick and install
-it from there. See <a href="/iso/nightly/">iso/nightly</a>.</p>
+it from there. See <a href="/iso/nightly/">iso/nightly</a>. The ISO is for amd64
+only for now; on arm64, add the APT repository below to Debian 13.</p>
 
 <h2>APT repository for Debian 13</h2>
 <p>To add Cutefish Desktop to Debian 13 (trixie) on amd64 or arm64, download the key,
@@ -121,7 +122,9 @@ iso() {
   cat << EOF
 <h1>Cutefish nightly ISO for Debian 13</h1>
 <p class="lead">The newest live ISO of Cutefish on Debian 13, built from the
-latest code. It is meant for testing; only the newest one is kept.</p>
+latest code. It is meant for testing; only the newest one is kept. It is for
+amd64 only for now; on arm64, add the <a href="/">APT repository</a> to
+Debian 13 instead.</p>
 
 <div class="file">
 <div class="name"><a href="$name.iso">$name.iso</a></div>
