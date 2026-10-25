@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: cutefish-calculator
+Source: https://github.com/cutefishos/calculator
+
+Files: *
+Copyright: 2021 CutefishOS
+License: GPL-3.0-or-later

@@ -1,0 +1,11 @@
+Source: cutefish-plymouth-theme
+Section: misc
+Priority: optional
+Maintainer: CutefishOS Packaging Team <support@cutefishos.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 3.9.6
+
+Package: cutefish-plymouth-theme
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Plymouth theme for CutefishOS.
