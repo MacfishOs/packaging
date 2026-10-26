@@ -29,6 +29,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       changed: ${{ steps.compare.outputs.changed }}
+      commits: ${{ steps.compare.outputs.commits }}
 
     steps:
       - name: Checkout
@@ -54,18 +55,26 @@ jobs:
             echo "Nothing changed since the last publish." >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          {
+            echo "commits<<EOF"
+            cat commits
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
 
+  # Every architecture builds the same commits, the ones listed above.
   build:
-    name: Debian 13
+    name: Debian 13 ${{ matrix.arch }}
     needs: changes
     if: needs.changes.outputs.changed == 'true'
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 300
-    permissions:
-      contents: read
-      id-token: write
-      attestations: write
-      actions: write
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
 
     steps:
       - name: Free disk space
@@ -79,28 +88,81 @@ jobs:
           path: packaging
 
       - name: Check out the projects
+        env:
+          COMMITS: ${{ needs.changes.outputs.commits }}
         run: |
-          echo "packaging $(git -C packaging rev-parse HEAD)" > commits
-          while read -r project _; do
-            [[ -z "$project" || "$project" == \#* ]] && continue
-            [[ -f "packaging/debian/$project/debian/source/format" ]] \
-              && grep -q native "packaging/debian/$project/debian/source/format" \
-              && continue
-            git clone --depth 1 "https://github.com/cutefishos/$project.git" "$project"
-            echo "$project $(git -C "$project" rev-parse HEAD)" >> commits
-          done < packaging/versions
-          cat commits
+          echo "$COMMITS" | while read -r project commit; do
+            [[ "$project" == packaging ]] && continue
+            git init --quiet "$project"
+            git -C "$project" fetch --quiet --depth 1 "https://github.com/cutefishos/$project.git" "$commit"
+            git -C "$project" checkout --quiet --detach FETCH_HEAD
+          done
 
+      # Skia's GN binary is built for the runner's architecture.
       - name: Cache Skia
         uses: actions/cache@v6
         with:
           path: cutefish-toolkit/third_party/skia
-          key: skia-${{ hashFiles('cutefish-toolkit/scripts/fetch-skia.sh') }}
+          key: skia-${{ matrix.arch }}-${{ hashFiles('cutefish-toolkit/scripts/fetch-skia.sh') }}
 
       - name: Fetch Skia
         run: cutefish-toolkit/scripts/fetch-skia.sh
 
       - name: Build
+        run: |
+          docker run --rm \
+            -v "$PWD:/work" \
+            -w /work \
+            debian:trixie \
+            bash -euo pipefail -c '
+              apt-get update
+              apt-get install -y --no-install-recommends \
+                build-essential \
+                ca-certificates \
+                devscripts \
+                equivs \
+                git \
+                xz-utils
+
+              git config --global --add safe.directory "*"
+              packaging/debian/build.sh --install --snapshot
+            '
+          sudo chown -R "$(id -u):$(id -g)" packaging/out
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages-${{ matrix.arch }}
+          path: |
+            packaging/out/debian/*
+            !packaging/out/debian/*-dbgsym_*
+          if-no-files-found: error
+          retention-days: 7
+
+  repository:
+    name: Repository
+    needs: [changes, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          path: packaging
+
+      - name: Download packages
+        uses: actions/download-artifact@v8
+        with:
+          pattern: packages-*
+          path: out
+
+      # The amd64 build provides the sources and the Architecture: all
+      # packages.
+      - name: Index
         env:
           SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
         run: |
@@ -114,35 +176,30 @@ jobs:
               apt-get update
               apt-get install -y --no-install-recommends \
                 apt-utils \
-                build-essential \
-                ca-certificates \
                 devscripts \
-                equivs \
-                git \
                 gnupg \
                 xz-utils
 
-              git config --global --add safe.directory "*"
-              packaging/debian/build.sh --install --snapshot
-
               if [[ -n "$SIGNING_KEY" ]]; then
                 gpg --batch --import <<< "$SIGNING_KEY"
-                packaging/debian/publish.sh --sign "$SUITE" repo
+                packaging/debian/publish.sh --sign "$SUITE" repo out/packages-amd64 out/packages-arm64
               else
-                packaging/debian/publish.sh "$SUITE" repo
+                packaging/debian/publish.sh "$SUITE" repo out/packages-amd64 out/packages-arm64
               fi
             '
 
       - name: Checksums
+        env:
+          COMMITS: ${{ needs.changes.outputs.commits }}
         run: |
           sudo chown -R "$(id -u):$(id -g)" repo
-          cp commits "repo/dists/$SUITE/commits"
+          echo "$COMMITS" > "repo/dists/$SUITE/commits"
           (cd repo && find "pool/$SUITE" -type f | sort | xargs sha256sum) > "repo/dists/$SUITE/SHA256SUMS"
           cat "repo/dists/$SUITE/SHA256SUMS"
           {
             echo "## Commits"
             echo '```'
-            cat commits
+            cat "repo/dists/$SUITE/commits"
             echo '```'
             echo "## SHA-256"
             echo '```'
@@ -155,13 +212,73 @@ jobs:
         with:
           subject-checksums: repo/dists/${{ env.SUITE }}/SHA256SUMS
 
-      - name: Upload packages
+      - name: Upload repository
         uses: actions/upload-artifact@v7
         with:
-          name: cutefish-debian-13-amd64
+          name: cutefish-debian-13
           path: repo/
           if-no-files-found: error
           retention-days: 7
+
+  # A clean system on each architecture installs the desktop from the new
+  # repository, checking its signature too, before anything is published.
+  install:
+    name: Install ${{ matrix.arch }}
+    needs: repository
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Download repository
+        uses: actions/download-artifact@v8
+        with:
+          name: cutefish-debian-13
+          path: repo
+
+      - name: Install
+        run: |
+          signed=trusted=yes
+          if [[ -f "repo/dists/$SUITE/InRelease" ]]; then
+            signed=signed-by=/repo/cutefish.asc
+          fi
+          docker run --rm \
+            -v "$PWD/repo:/repo:ro" \
+            -e SUITE \
+            -e SIGNED="$signed" \
+            -e DEBIAN_FRONTEND=noninteractive \
+            debian:trixie \
+            bash -euo pipefail -c '
+              echo "deb [$SIGNED] file:/repo $SUITE main" > /etc/apt/sources.list.d/cutefish.list
+              apt-get update
+              apt-get install -y cutefish-desktop
+              dpkg -l | grep cutefish
+            '
+
+  publish:
+    name: Publish
+    needs: install
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          path: packaging
+
+      - name: Download repository
+        uses: actions/download-artifact@v8
+        with:
+          name: cutefish-debian-13
+          path: repo
 
       - name: Publish
         env:

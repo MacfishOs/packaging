@@ -3,7 +3,29 @@ cutefish-desktop
 
 # Base
 bash-completion
+bind9-dnsutils
+curl
+file
+git
+htop
+jq
+lsof
+man-db
 nano
+openssh-client
+psmisc
+ripgrep
+unzip
+usbutils
+xz-utils
+zip
+
+# Time, for the automatic setting in Date & Time
+systemd-timesyncd
+
+# Memory and thermals
+systemd-zram-generator
+thermald
 
 # Network
 iw

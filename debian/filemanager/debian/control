@@ -7,14 +7,18 @@ Build-Depends: cmake,
                cutefish-toolkit,
                cutefish-framework,
                libarchive-dev,
+               libbz2-dev,
                libfuse3-dev,
                libicu-dev,
+               liblzfse-dev,
+               liblzma-dev,
                libmtp-dev,
                libsmbclient-dev,
                libssh-dev,
                libudev-dev,
                libzip-dev,
-               pkg-config
+               pkg-config,
+               zlib1g-dev
 Standards-Version: 4.7.2
 Homepage: https://github.com/cutefishos/filemanager
 

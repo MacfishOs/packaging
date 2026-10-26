@@ -1,0 +1,3 @@
+# The BIOS boot loader, for the installer on computers without UEFI. It
+# conflicts with grub-efi-amd64, so it needs a list (one download) of its own.
+grub-pc

@@ -9,7 +9,8 @@ Homepage: https://github.com/cutefishos/packaging
 
 Package: cutefish-desktop
 Architecture: all
-Depends: cutefish-calendar,
+Depends: cutefish-calculator,
+         cutefish-calendar,
          cutefish-compositor,
          cutefish-core,
          cutefish-dm,
