@@ -21,6 +21,10 @@ zip
 # Time, for the automatic setting in Date & Time
 systemd-timesyncd
 
+# Memory and thermals
+systemd-zram-generator
+thermald
+
 # Network
 iw
 wireless-regdb
