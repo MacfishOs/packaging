@@ -1,0 +1,29 @@
+# Maintainer: CutefishOS Team
+
+pkgname=cutefish-dm
+pkgver=1.0
+pkgrel=1
+pkgdesc="Cutefish display manager"
+arch=('x86_64' 'aarch64')
+url="https://github.com/cutefishos/cutefish-dm"
+license=('GPL-3.0-or-later')
+groups=('cutefish')
+depends=('cutefish-toolkit' 'pam' 'systemd' 'cutefish-compositor')
+makedepends=('cmake' 'ninja')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+  cmake -B build -S "$pkgname-$pkgver" \
+    -GNinja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DPAM_DISTRO=arch \
+    -DBUILD_TESTING=OFF
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
