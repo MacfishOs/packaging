@@ -8,11 +8,13 @@ curl
 file
 git
 htop
+jq
 lsof
 man-db
 nano
 openssh-client
 psmisc
+ripgrep
 unzip
 usbutils
 xz-utils
